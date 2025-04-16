@@ -161,13 +161,13 @@
 
         <!-- Month selector -->
         <div style="margin-bottom: 20px;">
-            <label for="monthSelect">Select Month Broo:</label>
+            <label for="monthSelect">Select Month:</label>
             <select id="monthSelect" class="form-control" onchange="renderCalendar()">
-                <option value="4" selected>April</option>
+                <option value="4">April</option>
                 <option value="5">May</option>
                 <option value="6">June</option>
                 <option value="7">July</option>
-                <option value="8" >August</option>
+                <option value="8" selected>August</option>
                 <option value="9">September</option>
                 <option value="10">October</option>
                 <option value="11">November</option>
@@ -222,29 +222,64 @@
         let userData = {
             "Lakshani": {
                 tasks: {
-                     "Apr 15": ["Complete the project report"]
+                    "Aug 5": ["Complete project documentation", "Meeting with client at 2 PM"],
+                    "Aug 10": ["Submit weekly report"]
                 },
                 attendance: {
-                     "Apr 15": "present"
+                    "Aug 5": "present",
+                    "Aug 6": "present",
+                    "Aug 7": "absent",
+                    "Aug 10": "present"
                 }
             },
             "Gayan": {
-                tasks: {},
-                attendance: {}
+                tasks: {
+                    "Aug 3": ["Code review for new feature"],
+                    "Aug 8": ["Team lunch at 12:30 PM", "Update database schema"]
+                },
+                attendance: {
+                    "Aug 3": "present",
+                    "Aug 4": "present",
+                    "Aug 7": "present",
+                    "Aug 8": "absent"
+                }
             },
             "Lakmini": {
-                tasks: {},
-                attendance: {}
+                tasks: {
+                    "Aug 4": ["Prepare presentation slides"],
+                    "Aug 9": ["QA testing for mobile app"]
+                },
+                attendance: {
+                    "Aug 4": "present",
+                    "Aug 5": "absent",
+                    "Aug 9": "present"
+                }
             },
             "Yasith": {
-                tasks: {},
-                attendance: {}
+                tasks: {
+                    "Aug 2": ["Design website mockup"],
+                    "Aug 6": ["Client meeting at 10 AM", "Update website content"]
+                },
+                attendance: {
+                    "Aug 2": "present",
+                    "Aug 6": "present",
+                    "Aug 9": "absent"
+                }
             }
         };
 
         // Initialize the application
         window.onload = function() {
-            initializeData();
+            // Check if there's already saved data
+            const savedData = localStorage.getItem('freshAttendanceData');
+            if (!savedData) {
+                // Only initialize with sample data if no existing data
+                localStorage.setItem('freshAttendanceData', JSON.stringify(userData));
+            } else {
+                // Load existing data
+                userData = JSON.parse(savedData);
+            }
+            
             updateDateTime();
             setInterval(updateDateTime, 1000); // Update every second to show live time
         };
@@ -256,14 +291,6 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
             const dateTimeString = today.toLocaleString('en-US', options);
             datetimeElement.textContent = dateTimeString;
-        }
-
-        // Load user data from localStorage if available
-        function initializeData() {
-            const savedData = localStorage.getItem('freshAttendanceData');
-            if (savedData) {
-                userData = JSON.parse(savedData);
-            }
         }
 
         // Save data to localStorage
